@@ -1,9 +1,10 @@
 export interface Product {
     id: number
-    tittle: string
+    title: string
+    price: number
     description: string
     category: category
-    images: []
+    images: string[]
 }
 
 export interface category {
