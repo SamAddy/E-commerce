@@ -1,19 +1,15 @@
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios, { AxiosError } from "axios";
 
-import { Product } from "../../type/Product";
-import { ErrorValidation } from "../../type/Error";
+import { Product, ProductState } from "../../type/Product";
 import { ProductUpdate } from "../../type/ProductUpdate";
+import { CreateProduct } from "../../type/CreateProduct";
 
-const initialState : {
-    products: Product[],
-    loading: boolean, 
-    error: ""
-} = {
+const initialState : ProductState = {
     products: [],
-    loading: false,
+    loading: false, 
     error: ""
-}
+} 
 
 export const fetchAllProducts = createAsyncThunk(
     "fetchAllProducts", 
@@ -24,27 +20,27 @@ export const fetchAllProducts = createAsyncThunk(
         }
         catch(e) {
             const error = e as AxiosError
-            return error
+            if (error.response) {
+                return JSON.stringify(error.response.data)
+            }
+            return error.message
         }
     }
 )
 
 export const addNewProduct = createAsyncThunk(
     "createProduct",
-    async (product: Product) => {
+    async (product: CreateProduct) => {
         try{
-            const response = await axios.post("https://api.escuelajs.co/api/v1/products/", product)
+            const response = await axios.post<Product>("https://api.escuelajs.co/api/v1/products/", product)
             return response.data
         }
-        catch(error) {
-            if (axios.isAxiosError<ErrorValidation, Record<string, string[]>>(error)) {
-                console.log(error.status)
-                console.log(error.response)
-                return error
+        catch(e) {
+            const error = e as AxiosError
+            if (error.response) {
+                return JSON.stringify(error.response.data)
             }
-            else {
-                return error
-            }
+            return error.message
         }
     }
 )
@@ -56,14 +52,12 @@ export const updateExistingProduct = createAsyncThunk(
             const response = await axios.put<Product>(`https://api.escuelajs.co/api/v1/products/${product.id}`, product)
             return response.data
         }
-        catch(error) {
-            if (axios.isAxiosError<ErrorValidation, Record<string, string[]>>(error)) {
-                console.log(error.status)
-                console.log(error.response)
+        catch(e) {
+            const error = e as AxiosError
+            if (error.response) {
+                return JSON.stringify(error.response.data)
             }
-            else {
-                console.error(error)
-            }
+            return error.message
         }
     }
 )
@@ -75,14 +69,12 @@ export const deleteAProduct = createAsyncThunk(
             const response = await axios.delete(`https://api.escuelajs.co/api/v1/products/${product.id}`)
             return response.data
         }
-        catch(error) {
-            if (axios.isAxiosError<ErrorValidation, Record<string, string[]>>(error)) {
-                console.log(error.status)
-                console.log(error.response)
+        catch(e) {
+            const error = e as AxiosError
+            if (error.response) {
+                return JSON.stringify(error.response.data)
             }
-            else {
-                return error
-            }
+            return error.message
         }
     }
 )
@@ -91,58 +83,90 @@ const productsSlice = createSlice({
     name: "products",
     initialState,
     reducers: {
+        cleanUpProductReducer: (state) => {
+            return initialState
+        },
         sortProductByCategory: (state, action: PayloadAction<"asc"|"desc">) => {
-            if (action.payload === "asc") {
-                state.products.sort((a, b) => a.category.name.localeCompare(b.category.name))
-            }
-            else {
-                state.products.sort((a, b) => a.category.name.localeCompare(b.category.name))
-            }
+            state.products.sort((a, b) => {
+                if (action.payload === "asc") {
+                    return a.category.name.localeCompare(b.category.name)
+                }
+                else {
+                    return b.category.name.localeCompare(a.category.name)
+                }
+            })
         },
         sortProductByPrice: (state, action: PayloadAction<"asc"|"desc">) => {
-            if (action.payload === "asc") {
-                state.products.sort((a,b) => a.price - b.price)
-            } 
-            else {
-                state.products.sort((a,b) => b.price - a.price)
-            }  
+            state.products.sort((a, b) => {
+                if (action.payload === "asc") {
+                    return a.price - b.price
+                } 
+                else {
+                    return b.price - a.price
+                }  
+            })
         }
     },
     extraReducers: (build) => {
         build
+            .addCase(fetchAllProducts.pending, (state) => {
+                state.loading = true
+            })
             .addCase(fetchAllProducts.fulfilled, (state, action) => {
-                if (action.payload instanceof AxiosError) {
-                    state.error = action.payload.request
+                state.loading = false
+                if ( typeof action.payload === "string") {
+                    state.error = action.payload
                 }
                 else {
                     state.products = action.payload
                 }
+            })
+            .addCase(fetchAllProducts.rejected, (state) => {
                 state.loading = false
+                state.error = "Error fetching products. Please try again later."
             })
-            .addCase(fetchAllProducts.pending, (state, action) => {
+            .addCase(addNewProduct.pending, (state) => {
                 state.loading = true
-            })
-            .addCase(fetchAllProducts.rejected, (state, action) => {
-                console.error("Error fetching products: ", state.error)
+                state.error = ""
             })
             .addCase(addNewProduct.fulfilled, (state, action) => {
-                state.products.push(action.payload)
+                state.loading = false
+                if (typeof action.payload === "string") {
+                    state.error = action.payload
+                }
+                else {
+                    state.products.push(action.payload)
+                }   
             })
-            .addCase(addNewProduct.rejected, (state, action) => {
-                console.error("Error adding new product: ", action.error)
+            .addCase(addNewProduct.rejected, (state) => {
+                state.error = "Error adding new product"
+                state.loading = false
+            })
+            .addCase(updateExistingProduct.pending, (state) => {
+                state.loading = true
             })
             .addCase(updateExistingProduct.fulfilled, (state, action) => {
-                const updatedIndex = state.products.findIndex((product) => product.id === action.payload?.id)
-                if (updatedIndex !== -1 && action.payload) {
-                    state.products[updatedIndex] = action.payload
+                state.loading = false
+                if (typeof action.payload === "string") {
+                    state.error = action.payload
+                } 
+                else if ((action.payload as Product).id) {
+                    const updatedIndex = state.products.findIndex((product) => product.id === (action.payload as Product).id)
+                    if (updatedIndex !== -1) {
+                        state.products[updatedIndex] = action.payload as Product
+                    }
                 }
             })
+            .addCase(updateExistingProduct.rejected, (state) => {
+                state.error = "Error updating product"
+                state.loading = false
+            })
             .addCase(deleteAProduct.fulfilled, (state, action) => {
-            state.products.filter((product) => product.id !== action.payload.id)
-        })
+                state.products.filter((product) => product.id !== action.payload.id)
+            })
     }
 })
 
 const productsReducer = productsSlice.reducer
-export const { sortProductByPrice, sortProductByCategory } = productsSlice.actions
+export const { cleanUpProductReducer, sortProductByPrice, sortProductByCategory } = productsSlice.actions
 export default productsReducer
