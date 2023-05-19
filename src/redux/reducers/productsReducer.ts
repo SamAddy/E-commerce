@@ -64,9 +64,9 @@ export const updateExistingProduct = createAsyncThunk(
 
 export const deleteAProduct = createAsyncThunk(
     "deleteProduct",
-    async (product: Product) => {
+    async (productId: number) => {
         try {
-            const response = await axios.delete(`https://api.escuelajs.co/api/v1/products/${product.id}`)
+            const response = await axios.delete(`https://api.escuelajs.co/api/v1/products/${productId}`)
             return response.data
         }
         catch(e) {
