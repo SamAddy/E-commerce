@@ -1,0 +1,14 @@
+@use "../variables/colors";
+
+footer {
+    display: flex;
+    flex-wrap: wrap-reverse;
+    justify-content: space-between;
+    padding-top: 60px;
+
+    & a {
+        padding: 10px;
+        color: colors.$text-color;
+        text-decoration: none;
+    }
+}

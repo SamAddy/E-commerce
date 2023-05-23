@@ -1,0 +1,27 @@
+@use "../variables/spaces";
+
+@use "../variables/colors";
+
+@use "../variables/fonts";
+
+.page-not-found {
+    text-align: center;
+    padding: spaces.$padding-small;
+    &__title {
+        font-size: fonts.$font-size-heading-1;
+        margin-bottom: spaces.$margin-medium;
+    }
+    &__illustration {
+        width: 100%;
+        height: 100px;
+        background-image: url("../../assets/shopping-cart-fail.gif");
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+        animation: floatAnimation 2s ease-in-out infinite alternate;
+    }
+    &__message {
+        font-size: fonts.$font-size-medium;
+        margin-bottom: spaces.$margin-medium;
+    }
+}

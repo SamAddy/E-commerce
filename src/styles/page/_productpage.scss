@@ -1,0 +1,15 @@
+.product {
+    display: flex;
+    justify-content: center;
+    & img {
+        width: 400px;
+    }
+
+    // & product__additional-images img {
+    //     // & .productImage-secondary {
+    //     //     height: 40px;
+    //     //     width: 30px;
+    //     // }
+    // }
+}
+

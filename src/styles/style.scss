@@ -1,0 +1,12 @@
+@use "../styles/page/notfound";
+@use "../styles/page/header";
+@use "../styles/page/footer";
+@use "../styles/page/hompage";
+@use "../styles/page/productpage";
+@use "../styles/page/loginpage";
+
+main, footer {
+    max-width:calc(100vw - 4rem);
+    width:80rem;
+    margin:0 auto;
+}
