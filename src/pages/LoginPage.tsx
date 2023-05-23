@@ -1,14 +1,15 @@
 import React, { useEffect } from 'react'
+import { Box, Input, TextField, Typography } from '@mui/material'
+
 import Header from './Header'
-import { Box, Input, TextField } from '@mui/material'
 import CustomBtn from '../styles/component/CustomBtn'
 import useCustomSelector from '../hooks/useCustomSelector'
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router'
 import { useForm } from 'react-hook-form'
 import { login } from '../redux/reducers/usersReducer'
-import { User, UserCredentials } from '../type/User'
 import store from '../test/shared/store'
+import { Link } from 'react-router-dom'
 
 const LoginPage = () => {
     const { users, loading, error, currentUser } = useCustomSelector((state) => state.usersReducer)
@@ -25,19 +26,18 @@ const LoginPage = () => {
             console.log(error)
         })
     }
-
     return (
         <div>
             <Header />
-            <main>
+            <main className="login">
+                
                 <Box
                     component="form"
-                    sx={{
-                        width: 500,
-                        maxWidth: "100%",
-                    }}
                     onSubmit={handleSubmit(handleLogin)}
                 >
+                    <Typography component="h4" variant="h4">
+                    Login
+                </Typography>
                     <TextField
                         fullWidth
                         {...register('email', { required: true })}
@@ -56,52 +56,14 @@ const LoginPage = () => {
                         margin="normal"
                     />
                     <CustomBtn type="submit" disabled={loading}>Log In</CustomBtn>
+                    <Typography variant="body1" component="body">
+                    Don't have an account? 
+                    <Link to="register/">Sign Up</Link>
+                </Typography>
                 </Box>
-                {loading && <p>Loading...</p>}
-                {error && <p>Error: {error}</p>}
-                {currentUser && <p>Login successful. Welcome, {currentUser.name}!</p>}
             </main>
         </div>
     )
 }
-
-// const LoginPage = () => {
-//     const dispatch = useDispatch();
-//     const { loading, error } = useCustomSelector((state) => state.usersReducer);
-//     const { register, handleSubmit } = useForm();
-
-//     const onSubmit = async (data: UserCredentials) => {
-//         const { email, password } = data;
-//         login({email, password})
-//     }
-
-//     return (
-//         <div>
-//             <header>
-//                 <Header />
-//             </header>
-//             <main>
-//                 <form onSubmit={handleSubmit(onSubmit)}>
-//                     <label>Email</label>
-//                     <input type="email" {...register('email', { required: true })} />
-//                     <label>Password</label>
-//                     <input
-//                         type="password"
-//                         {...register('password', { required: true })}
-//                     />
-//                     <button type="submit" disabled={loading}>
-//                         Login
-//                     </button>
-//                     {error && <p>{error}</p>}
-//                 </form>
-//             </main>
-//             <Box
-//                 component="form">
-//                     <TextField />
-//             </Box>
-//         </div>
-//     );
-// };
-
 
 export default LoginPage
