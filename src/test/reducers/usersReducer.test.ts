@@ -1,4 +1,4 @@
-import usersReducer, { cleanUpUsersReducer, fetchAllUsers, registerUser } from "../../redux/reducers/usersReducer"
+import usersReducer, { cleanUpUsersReducer, fetchAllUsers, login, registerUser } from "../../redux/reducers/usersReducer"
 import { newUser } from "../data/users"
 import userServer from "../mock/userServer"
 import store from "../shared/store"
@@ -35,15 +35,13 @@ describe("Testing userReducer", () => {
     })
     test("Should fetch all users in rejected state", () => {
         const state = usersReducer(undefined, fetchAllUsers.rejected)
-        expect(state).toEqual(
-            {
-                users: [],
-                loading: false,
-                error: 'Error fetching users. Please try again.'
-              }
-        )
+        expect(state.error).toEqual("Error fetching users. Please try again.")
         expect(state.loading).toBe(false)
     })
-    test("Should check registerUser in fulfilled state", async () => {
+    test("Should check login user in fullfilled state", async () => {
+        const email = "admin@mail.com"
+        const password = "admin123"
+        await store.dispatch(login({ email, password }))
+        expect(store.getState().usersReducer.currentUser?.name).toBe('Admin')
     })
 })
