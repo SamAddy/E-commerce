@@ -5,14 +5,14 @@ import { Facebook, GitHub, Instagram, LinkedIn, Pinterest, Twitter, YouTube } fr
 
 const Footer = () => {
   return (
-    <Box>
+    <Box component="footer">
         <Box>
             <NavLink to="">About us</NavLink>
             <NavLink to="">Our commitments</NavLink>
             <NavLink to="">Join us</NavLink>
             <NavLink to="">Newsletter</NavLink>
         </Box>
-        <Box>
+        <Box className="social__links">
             <Link href="https://www.facebook.com/" underline="none">
                 <Facebook />
             </Link>
@@ -35,10 +35,13 @@ const Footer = () => {
                 <Twitter />
             </Link>
         </Box>
-        <Box>
+        <Box className="copyright">
             <Typography>
                 Copyright © 2023 
-                <Link href="https://samaddy.github.io/"> SamAddy</Link>.
+                <Link href="https://samaddy.github.io/">
+                    SamAddy.
+                </Link>
+                .
                 </Typography>
         </Box>
     </Box>
