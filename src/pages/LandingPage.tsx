@@ -1,15 +1,24 @@
-import React from 'react'
-import { Box, Button, Container, Grid, Link, Paper, Typography } from '@mui/material'
-import Header from './Header'
-import Footer from './Footer'
-import { Image } from '@mui/icons-material'
+import React, { useEffect } from 'react'
+import { Box, Button, Card, CardActionArea, CardContent, CardMedia, Container, Grid, ImageList, ImageListItem, ImageListItemBar, Typography } from '@mui/material'
+import Header from '../component/Header'
+import Footer from '../component/Footer'
+import useCustomSelector from '../hooks/useCustomSelector'
+import useAppDispatch from '../hooks/useAppDispatch'
+import { fetchAllCartegories } from '../redux/reducers/cartegoriesReducer'
+import { Link } from 'react-router-dom'
+
 
 const LandingPage = () => {
+  const { categories, loading, error } = useCustomSelector((state) => state.cartegoriesReducer)
+  const dispatch = useAppDispatch()
+
+  useEffect(() => {
+    dispatch(fetchAllCartegories())
+  }, [dispatch])
   return (
     <div>
       <header>
         <Header />
-
       </header>
       <main>
         <Container maxWidth="md">
@@ -23,12 +32,45 @@ const LandingPage = () => {
               </Button>
             </Grid>
             <Grid item xs={12} md={6}>
-              <Paper>
-                <img src="https://unsplash.com/photos/k6aQzmIbR1s" alt="Anchor trades" />
-              </Paper>
+              <Box
+                className="hero"
+                component="div"
+                style={{ backgroundImage: `url(./assets/sales.avif)` }}
+              />
             </Grid>
           </Grid>
         </Container>
+        {loading ? (
+          <Typography>Loading...</Typography>
+        ) : error ? (
+          <Typography>Error: {error}</Typography>
+        ) : (
+          <Grid container spacing={3}>
+            {categories.map(category => (
+              <Grid item key={category.id} xs={12} sm={6} md={4} lg={3}>
+                <Card>
+                <CardActionArea>
+                  <Link to={`/categories/${category.id}`}>
+                  <CardContent>
+                  <CardMedia
+                        component="img"
+                        height="150"
+                        image={category.image}
+                        alt={category.name}
+                      />
+                    <Typography variant="h5" component="h5" gutterBottom>
+                      {category.name}
+                    </Typography>
+                  </CardContent>
+                  </Link>
+                  </CardActionArea>
+                </Card>
+              </Grid>
+            ))
+            }
+          </Grid>
+        )
+      }
       </main>
       <Footer />
     </div>
