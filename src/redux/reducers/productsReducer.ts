@@ -8,7 +8,8 @@ import { CreateProduct } from "../../type/CreateProduct";
 const initialState : ProductState = {
     products: [],
     loading: false, 
-    error: ""
+    error: "",
+    singleProduct: null
 } 
 
 export const fetchAllProducts = createAsyncThunk(
@@ -16,6 +17,23 @@ export const fetchAllProducts = createAsyncThunk(
     async () => {
         try {
             const response = await axios.get<Product[]>("https://api.escuelajs.co/api/v1/products")
+            return response.data
+        }
+        catch(e) {
+            const error = e as AxiosError
+            if (error.response) {
+                return JSON.stringify(error.response.data)
+            }
+            return error.message
+        }
+    }
+)
+
+export const fetchSingleProduct = createAsyncThunk(
+    "product",
+    async (productId: number) => {
+        try {
+            const response = await axios.get<Product>(`https://api.escuelajs.co/api/v1/products/${productId}`)
             return response.data
         }
         catch(e) {
@@ -124,6 +142,24 @@ const productsSlice = createSlice({
             .addCase(fetchAllProducts.rejected, (state) => {
                 state.loading = false
                 state.error = "Error fetching products. Please try again later."
+            })
+            .addCase(fetchSingleProduct.pending, (state) => {
+                state.loading = true
+                state.error = ""
+            })
+            .addCase(fetchSingleProduct.fulfilled, (state, action) => {
+                state.loading = false
+
+                if ( typeof action.payload === "string") {
+                    state.error = action.payload
+                }
+                else {
+                    state.singleProduct = action.payload
+                }
+            })
+            .addCase(fetchSingleProduct.rejected, (state, action) => {
+                state.error = action.payload as string
+                state.loading = false
             })
             .addCase(addNewProduct.pending, (state) => {
                 state.loading = true
