@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { Box, Input, TextField, Typography } from '@mui/material'
 
-import Header from './Header'
+import Header from '../component/Header'
 import CustomBtn from '../styles/component/CustomBtn'
 import useCustomSelector from '../hooks/useCustomSelector'
 import { useDispatch } from 'react-redux'
@@ -29,7 +29,7 @@ const LoginPage = () => {
     return (
         <div>
             <Header />
-            <main className="login">
+            <main className="form">
                 
                 <Box
                     component="form"
@@ -58,7 +58,7 @@ const LoginPage = () => {
                     <CustomBtn type="submit" disabled={loading}>Log In</CustomBtn>
                     <Typography variant="body1" component="body">
                     Don't have an account? 
-                    <Link to="register/">Sign Up</Link>
+                    <Link to="/register">Register</Link>
                 </Typography>
                 </Box>
             </main>
