@@ -1,12 +1,12 @@
 import React, { useEffect } from 'react'
 import { Box, Button, Card, CardActionArea, CardContent, CardMedia, Container, Grid, ImageList, ImageListItem, ImageListItemBar, Typography } from '@mui/material'
+import { Link } from 'react-router-dom'
+
 import Header from '../component/Header'
 import Footer from '../component/Footer'
 import useCustomSelector from '../hooks/useCustomSelector'
 import useAppDispatch from '../hooks/useAppDispatch'
 import { fetchAllCartegories } from '../redux/reducers/cartegoriesReducer'
-import { Link } from 'react-router-dom'
-
 
 const LandingPage = () => {
   const { categories, loading, error } = useCustomSelector((state) => state.cartegoriesReducer)
@@ -22,12 +22,16 @@ const LandingPage = () => {
       </header>
       <main>
         <Container maxWidth="md">
-          <Grid container spacing={2} alignItems="center" justifyContent="center">
-            <Grid item xs={12} md={6}>
+          <Grid container spacing={2} alignItems="center" justifyContent="center" className="explore-grid">
+            <Grid item xs={12} md={6} >
               <Typography variant="body1" gutterBottom>
                 Discover a wide range of high-quality products for all your needs.
               </Typography>
-              <Button variant="contained" color="primary">
+              <Button
+                variant="contained"
+                href="/products"
+                color="primary"
+              >
                 Explore Products
               </Button>
             </Grid>
@@ -49,20 +53,20 @@ const LandingPage = () => {
             {categories.map(category => (
               <Grid item key={category.id} xs={12} sm={6} md={4} lg={3}>
                 <Card>
-                <CardActionArea>
-                  <Link to={`/categories/${category.id}`}>
-                  <CardContent>
-                  <CardMedia
-                        component="img"
-                        height="150"
-                        image={category.image}
-                        alt={category.name}
-                      />
-                    <Typography variant="h5" component="h5" gutterBottom>
-                      {category.name}
-                    </Typography>
-                  </CardContent>
-                  </Link>
+                  <CardActionArea>
+                    <Link to={`/categories/${category.id}`}>
+                      <CardContent>
+                        <CardMedia
+                          component="img"
+                          height="150"
+                          image={category.image}
+                          alt={category.name}
+                        />
+                        <Typography variant="h5" component="h5" gutterBottom>
+                          {category.name}
+                        </Typography>
+                      </CardContent>
+                    </Link>
                   </CardActionArea>
                 </Card>
               </Grid>
@@ -70,7 +74,7 @@ const LandingPage = () => {
             }
           </Grid>
         )
-      }
+        }
       </main>
       <Footer />
     </div>
