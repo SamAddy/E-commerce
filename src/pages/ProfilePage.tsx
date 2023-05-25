@@ -1,25 +1,41 @@
-import React from 'react'
-import useCustomSelector from '../hooks/useCustomSelector'
+import React, { useEffect } from 'react'
 import { Typography } from '@mui/material'
-import Header from './Header'
+import { useNavigate } from 'react-router'
+import { Link } from 'react-router-dom'
+
+import Header from '../component/Header'
+import useCustomSelector from '../hooks/useCustomSelector'
 
 const ProfilePage = () => {
-    const { users, isLoggedIn } = useCustomSelector((state) => state.usersReducer)
-    
-    if (isLoggedIn) {
+    const { isLoggedIn, currentUser, error, loading } = useCustomSelector((state) => state.usersReducer)
+    const navigate = useNavigate()
+
+    useEffect(() => {
+        const token = localStorage.getItem("token")
+        if (token) {
+            store.dispatch(authenticate(token))
+            console.log(token)
+        }
+    }, [])
+    if (!currentUser) {
         return (
             <div>
                 <Header />
-                <Typography variant="h1" component="h1">Unauthorized :(</Typography>
+                <Typography variant="body1" component="p" justifyContent="center">
+                    Please login to view your profile.
+                </Typography>
+                <Link to="/login">Login</Link>
             </div>
-          )
+        )
     }
     return (
         <div>
             <Header />
-            You are right here in your profile.
+            <Typography variant="h4" component="h4" justifyContent="center">
+                Welcome, {currentUser.name}
+            </Typography>
         </div>
-      )
+    )
 }
 
 export default ProfilePage
