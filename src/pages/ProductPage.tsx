@@ -7,7 +7,7 @@ import { useDispatch } from 'react-redux'
 import useCustomSelector from '../hooks/useCustomSelector'
 import { fetchSingleProduct } from '../redux/reducers/productsReducer'
 import store from '../redux/store'
-import Header from './Header'
+import Header from '../component/Header'
 
 const ProductPage = () => {
     const { id } = useParams<{ id: string }>()
@@ -21,13 +21,13 @@ const ProductPage = () => {
         }
     }, [dispatch, id])
     if (loading) {
-        return <div>Loading...</div>;
+        return <div>Loading...</div>
     }
     if (error) {
-        return <div>Error: {error}</div>;
+        return <div>Error: {error}</div>
     }
     if (!singleProduct) {
-        return <div>No product found.</div>;
+        return <div>No product found.</div>
     }
     return (
         <div>
