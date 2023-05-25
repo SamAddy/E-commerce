@@ -4,6 +4,7 @@
 @use "../styles/page/hompage";
 @use "../styles/page/productpage";
 @use "../styles/page/loginpage";
+@use "../styles/page/landingpage";
 
 main, footer {
     max-width:calc(100vw - 4rem);
