@@ -13,6 +13,7 @@ export interface ProductState {
     products: Product[],
     loading: boolean,
     error: string
+    singleProduct: Product | null
 }
 
 export interface CreateProduct {
@@ -27,3 +28,8 @@ export interface ProductUpdate {
     id: number
     update: Partial<Omit<Product, "id">> & { id?: never }
 }
+
+export interface FetchProductsParams {
+    offset: number;
+    limit: number;
+  }

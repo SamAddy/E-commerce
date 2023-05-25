@@ -12,6 +12,7 @@ export interface UserState {
     currentUser?: User,
     loading: boolean,
     error: string
+    isLoggedIn: boolean 
 }
 
 export interface UserCredentials {
