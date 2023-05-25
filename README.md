@@ -4,28 +4,22 @@
 ![Redux toolkit](https://img.shields.io/badge/RTK-v.1-purple)
 ![TypeScript](https://img.shields.io/badge/TypeScript-v.4-green)
 ![SASS](https://img.shields.io/badge/SASS-v.1-hotpink)
+![MUI](https://img.shields.io/badge/MUI-%230081CB.svg?style=for-the-badge&logo=mui&logoColor=white)
 
-This project requires implementation of TypeScript and SASS.
+This an E-commerce project built with TypeScript, redux, react and SASS and MUI. The data was pulled from this API endpoint [https://fakeapi.platzi.com/](https://fakeapi.platzi.com/). Click [here]() to view it live.
 
-## Requirement
-
-1. Use the API endpoint [https://fakeapi.platzi.com/](https://fakeapi.platzi.com/) to create an e-commerce website. Read the documentation and learn how to use the different endpoints.
-2. Create at lease 4 pages (can be more if you want): Home page, product page,
-profile page (only available if user logins), and cart page (cart could be a page or a modal)
-3. Create Redux store for following features:
-    - product reducer: get all products, find a single products, sort products by
-    categories, sort products by price. Create, update and delete a product (enable update & delete features only for admin of the webapp. For example, you can check if user is your admin account before let them delete product)
-    - user reducer: Register and Login
-    - cart reducer: add product to cart, remove products, update products's quantity in cart
-4. When adding routers to your application, programatically set certain routes to be private. For example, route to user profile page should not be accessible if user has not logged in.
-5. Deploy the application and rewrite README file.
-
-## Bonus
-
-1. Use context API to switch theme
-2. Implement unit testing for the reducers
+## Features
+* Login and register pages
+* Add to cart
+* Sort products by price, name and category
+* Profile page
 
 ## Instruction to start the project
+Clone the repository to your local machine using the command 
+
+```
+    https://github.com/SamAddy/fs15_frontend-project.git
+```
 
 In the project directory, you can run:
 
