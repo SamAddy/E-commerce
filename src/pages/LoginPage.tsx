@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { Box, Input, TextField, Typography } from '@mui/material'
+import { Box, TextField, Typography } from '@mui/material'
 
 import Header from '../component/Header'
 import CustomBtn from '../styles/component/CustomBtn'
@@ -13,15 +13,16 @@ import { Link } from 'react-router-dom'
 
 const LoginPage = () => {
     const { users, loading, error, currentUser } = useCustomSelector((state) => state.usersReducer)
-    const { register, handleSubmit } = useForm<{ email: string; password: string }>()
+    const isLoggedIn = useCustomSelector((state) => state.usersReducer.isLoggedIn)
+    const { register, handleSubmit } = useForm<{ email: string, password: string }>()
     const navigate = useNavigate()
     const dispatch = useDispatch()
-
-    const handleLogin = (data: { email: string; password: string }) => {
+    const handleLogin = (data: { email: string, password: string }) => {
         const { email, password } = data
         store.dispatch(login({ email: email, password: password })).then((user) => {
-            console.log(user)
-            navigate("/profile")
+            if (user.meta.requestId == "fulfilled") {
+                navigate("/")
+            }
         }).catch((error) => {
             console.log(error)
         })
@@ -29,15 +30,14 @@ const LoginPage = () => {
     return (
         <div>
             <Header />
-            <main className="form">
-                
+            <Box className="form">
                 <Box
                     component="form"
                     onSubmit={handleSubmit(handleLogin)}
                 >
                     <Typography component="h4" variant="h4">
-                    Login
-                </Typography>
+                        Login
+                    </Typography>
                     <TextField
                         fullWidth
                         {...register('email', { required: true })}
@@ -55,13 +55,13 @@ const LoginPage = () => {
                         id="fullWidth"
                         margin="normal"
                     />
-                    <CustomBtn type="submit" disabled={loading}>Log In</CustomBtn>
+                    <CustomBtn type="submit" disabled={loading} >Log In</CustomBtn>
                     <Typography variant="body1" component="body">
-                    Don't have an account? 
-                    <Link to="/register">Register</Link>
-                </Typography>
+                        Don't have an account?
+                        <Link to="/register">Register</Link>
+                    </Typography>
                 </Box>
-            </main>
+            </Box>
         </div>
     )
 }
