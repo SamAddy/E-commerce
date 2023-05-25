@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { useParams } from 'react-router'
-import useCustomSelector from '../hooks/useCustomSelector'
-import { fetchProductByCartegory } from '../redux/reducers/cartegoriesReducer'
-import store from '../redux/store'
 import { Box, Card, CardActionArea, CardContent, CardMedia, Grid, IconButton, MenuItem, TextField, Typography } from '@mui/material'
 import { AddShoppingCart } from '@mui/icons-material'
 import { Link } from 'react-router-dom'
+
+import useCustomSelector from '../hooks/useCustomSelector'
+import { fetchProductByCartegory } from '../redux/reducers/cartegoriesReducer'
+import store from '../redux/store'
 import Header from '../component/Header'
-import { sortProductByName, sortProductByPrice, sortProductsByNameAsc, sortProductsByNameDesc, sortProductsByPriceAsc, sortProductsByPriceDesc } from '../redux/reducers/productsReducer'
+import { sortProductsByNameAsc, sortProductsByNameDesc, sortProductsByPriceAsc, sortProductsByPriceDesc } from '../redux/reducers/productsReducer'
 
 const CategoryProducts = () => {
   const { id } = useParams<{ id: string }>()
@@ -19,7 +20,6 @@ const CategoryProducts = () => {
 
   useEffect(() => {
     store.dispatch(fetchProductByCartegory(Number(id)))
-    // dispatch(fetchProductByCartegory as any)(Number(id))
   }, [dispatch, id])
 
   useEffect(() => {
@@ -43,13 +43,13 @@ const CategoryProducts = () => {
   }, [dispatch, selectedSortOption])
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div>Loading...</div>
   }
   if (error) {
-    return <div>Error: {error}</div>;
+    return <div>Error: {error}</div>
   }
   if (!products) {
-    return <div>No products found.</div>;
+    return <div>No products found.</div>
   }
 
   const sortingOptions = [
@@ -69,41 +69,41 @@ const CategoryProducts = () => {
         <Header />
       </header>
       <main>
-        <Box 
+        <Box
           sx={{
             marginTop: "20px",
             marginBottom: "20px"
           }}
         >
-        <TextField
-          id="sort-select"
-          select
-          label="Sort By"
-          value={selectedSortOption}
-          onChange={handleSortOptionChange}
-          sx={{
-            width: "300px",
-            paddingRight: "10px"
-          }}
-        >
-          {sortingOptions.map((option) => (
-            <MenuItem key={option.id} value={option.id}>
-              {option.label}
-            </MenuItem>
-          ))}
-        </TextField>
-        <TextField
-          placeholder="Search by name"
-          variant="outlined"
-          className="search"
-          // value={filter}
-          // onChange={onChangeFilter}
-          sx={{
-            width: "300px",
-          }}
-        />
+          <TextField
+            id="sort-select"
+            select
+            label="Sort By"
+            value={selectedSortOption}
+            onChange={handleSortOptionChange}
+            sx={{
+              width: "300px",
+              paddingRight: "10px"
+            }}
+          >
+            {sortingOptions.map((option) => (
+              <MenuItem key={option.id} value={option.id}>
+                {option.label}
+              </MenuItem>
+            ))}
+          </TextField>
+          <TextField
+            placeholder="Search by name"
+            variant="outlined"
+            className="search"
+            // value={filter}
+            // onChange={onChangeFilter}
+            sx={{
+              width: "300px",
+            }}
+          />
         </Box>
-        
+
         <Grid container spacing={3} className="card-container">
           {products.map(product => (
             <Grid item key={product.id} xs={12} sm={6} md={4} lg={3}>
