@@ -20,6 +20,7 @@ const CategoryProducts = () => {
 
   useEffect(() => {
     store.dispatch(fetchProductByCartegory(Number(id)))
+    // dispatch(fetchProductByCartegory as any)(Number(id))
   }, [dispatch, id])
 
   useEffect(() => {
@@ -120,10 +121,10 @@ const CategoryProducts = () => {
                         image={product.images[0]}
                         alt={product.title}
                       />
-                      <Typography variant="h5" component="h2" gutterBottom>
+                      <Typography variant="h5" component="h5" color="secondary" gutterBottom>
                         {product.title}
                       </Typography>
-                      <Typography variant="body1">{product.category.name}</Typography>
+                      <Typography variant="body1" color="text.secondary">{product.category.name}</Typography>
                       <Typography variant="body2" color="text.secondary">
                         {product.price} EUR
                       </Typography>
