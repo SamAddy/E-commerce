@@ -7,6 +7,7 @@ import useCustomSelector from '../hooks/useCustomSelector'
 import MenuIcon from '@mui/icons-material/Menu'
 import { useDispatch } from 'react-redux'
 import { logout } from '../redux/reducers/usersReducer'
+import ThemeSwitcher from './ThemeSwitcher'
 
 const pages = ['Products']
 const settings = ['Profile', 'Account', 'Dashboard', 'Login']
@@ -25,10 +26,10 @@ export const Header = () => {
         setAnchorElUser(event.currentTarget)
     }
     const handleCloseNavMenu = () => {
-        setAnchorElNav(null);
+        setAnchorElNav(null)
     }
     const handleCloseUserMenu = () => {
-        setAnchorElUser(null);
+        setAnchorElUser(null)
     }
     const handleLogout = () => {
         dispatch(logout())
@@ -36,6 +37,7 @@ export const Header = () => {
     }
     return (
         <div>
+            <ThemeSwitcher />
             <AppBar position="static">
                 <Container maxWidth="xl">
                     <Toolbar disableGutters>
@@ -169,7 +171,7 @@ export const Header = () => {
                                     <>
                                         {settings.slice(0, 3).map((setting) => (
                                             <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                                                <Typography component={Link} to={`/${setting.toLowerCase()}`} textAlign="center">
+                                                <Typography component={Link} to={`/${setting.toLowerCase()}`} color="primary" textAlign="center">
                                                     {setting}
                                                 </Typography>
                                             </MenuItem>
@@ -183,7 +185,7 @@ export const Header = () => {
                                 ) : (
                                     settings.map((setting) => (
                                         <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                                            <Typography component={Link} to={`/${setting.toLowerCase()}`} textAlign="center">
+                                            <Typography component={Link} to={`/${setting.toLowerCase()}`} color="primary" textAlign="center">
                                                 {setting}
                                             </Typography>
                                         </MenuItem>
