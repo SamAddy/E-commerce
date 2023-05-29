@@ -14,7 +14,7 @@ This an E-commerce project built with TypeScript, redux, react and SASS and MUI.
 * You may add products to cart while shopping.
 * Sort products by price, name and category
 * Profile page - Admin has the right to update products, add products, delete product and also add new categories.
-* Context API for switching theme.
+* Context API for switching
 
 ## Structure
 ```
