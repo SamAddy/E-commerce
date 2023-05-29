@@ -1,5 +1,5 @@
-import React from 'react'
-import { AppBar, Avatar, Box, Button, Container, IconButton, Menu, MenuItem, TextField, Toolbar, Tooltip, Typography } from '@mui/material'
+import React, { useState } from 'react'
+import { AppBar, Avatar, Badge, Box, Button, Container, IconButton, Menu, MenuItem, Toolbar, Tooltip, Typography } from '@mui/material'
 import { Link, useNavigate } from 'react-router-dom'
 import { ShoppingCart } from '@mui/icons-material'
 
@@ -18,6 +18,8 @@ export const Header = () => {
     const { currentUser, isLoggedIn } = useCustomSelector((state) => state.usersReducer)
     const dispatch = useDispatch()
     const navigate = useNavigate()
+    const cartItems = useCustomSelector((state) => state.cartReducer.items)
+    const getTotalItems = cartItems.reduce((total, cartItem) => total + cartItem.quantity, 0)
 
     const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorElNav(event.currentTarget)
@@ -137,13 +139,20 @@ export const Header = () => {
                                 color="inherit"
                                 onClick={handleLogout}
                             >
-                                {isLoggedIn? "Login" : "Logout"}
+                                {isLoggedIn ? "Login" : "Logout"}
                             </Button>
-                            <IconButton 
+                            
+                            <IconButton
                                 color="inherit"
+                                href="/cart"
                             >
-                                <ShoppingCart />    
+                                {/* <Link to="/cart"> */}
+                                <Badge badgeContent={getTotalItems} color="error">
+                                    <ShoppingCart color="inherit"/>
+                                </Badge>
+                                {/* </Link> */}
                             </IconButton>
+                            
                         </Box>
                         <Box sx={{ flexGrow: 0 }}>
                             <Tooltip title="Open settings">
