@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react'
+import React, { Component, useEffect } from 'react'
 import { Box, Button, Card, CardActionArea, CardContent, CardMedia, Container, Grid, ImageList, ImageListItem, ImageListItemBar, Typography } from '@mui/material'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 import Header from '../component/Header'
 import Footer from '../component/Footer'
@@ -11,10 +11,14 @@ import { fetchAllCartegories } from '../redux/reducers/cartegoriesReducer'
 const LandingPage = () => {
   const { categories, loading, error } = useCustomSelector((state) => state.cartegoriesReducer)
   const dispatch = useAppDispatch()
+  const navigate = useNavigate()
 
   useEffect(() => {
     dispatch(fetchAllCartegories())
   }, [dispatch])
+  const handleButtonClick = () => {
+    navigate("/products")
+  }
   return (
     <div>
       <header>
@@ -29,7 +33,7 @@ const LandingPage = () => {
               </Typography>
               <Button
                 variant="contained"
-                href="/products"
+                onClick={handleButtonClick}
                 color="primary"
               >
                 Explore Products
