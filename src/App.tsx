@@ -10,6 +10,9 @@ import RegisterPage from './pages/RegisterPage'
 import ProfilePage from './pages/ProfilePage'
 import ProductPage from './pages/ProductPage'
 import CategoryProducts from './pages/CategoryProducts'
+import { ThemeProvider } from './theme/ThemeContext'
+import { StyledContainer } from './component/ThemeSwitcher'
+import CartPage from './pages/CartPage'
 
 const App = () => {
   const router = createBrowserRouter([
@@ -45,15 +48,23 @@ const App = () => {
     {
       path: "profile/",
       element: <ProfilePage />
-    }
+    },
+    {
+      path: "cart/",
+      element: <CartPage />
+    },
   ])
 
   return (
 
     <StyledEngineProvider injectFirst>
-      <RouterProvider
-        router={router}
-      />
+      <ThemeProvider>
+          <StyledContainer>
+            <RouterProvider
+              router={router}
+            />
+          </StyledContainer>
+      </ThemeProvider>
     </StyledEngineProvider>
   )
 }
