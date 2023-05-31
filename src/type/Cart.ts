@@ -1,11 +1,13 @@
+import { Product } from "./Product"
+
 export interface CartItem {
     id: number
-    name: string
+    title: string
     price: number
     quantity: number
 }
 
 export interface CartState {
-    items: CartItem[]
+    items: CartItem[],
 }
 
