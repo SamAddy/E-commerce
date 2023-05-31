@@ -37,6 +37,10 @@ export const Header = () => {
         dispatch(logout())
         navigate("/")
     }
+
+    const handlCartButton = () => {
+        navigate("/cart")
+    }
     return (
         <div>
             <ThemeSwitcher />
@@ -144,13 +148,11 @@ export const Header = () => {
                             
                             <IconButton
                                 color="inherit"
-                                href="/cart"
+                                onClick={handlCartButton}
                             >
-                                {/* <Link to="/cart"> */}
                                 <Badge badgeContent={getTotalItems} color="error">
                                     <ShoppingCart color="inherit"/>
                                 </Badge>
-                                {/* </Link> */}
                             </IconButton>
                             
                         </Box>
