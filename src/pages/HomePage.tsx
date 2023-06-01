@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Box, Card, CardActionArea, CardContent, CardMedia, Grid, IconButton, MenuItem, Pagination, TextField, Typography } from '@mui/material'
-import { AddShoppingCart } from '@mui/icons-material'
+import { AddShoppingCart, Preview } from '@mui/icons-material'
 import { Link } from 'react-router-dom'
 
 import { fetchAllProducts, sortProductsByNameAsc, sortProductsByNameDesc, sortProductsByPriceAsc, sortProductsByPriceDesc } from "../redux/reducers/productsReducer"
@@ -10,39 +10,28 @@ import Header from '../component/Header'
 import Footer from '../component/Footer'
 import { Product } from '../type/Product'
 import { fetchAllUsers } from '../redux/reducers/usersReducer'
+import { filterProducts, useDebounce } from '../hooks/useDebounce'
+import { addProductToCart } from '../redux/reducers/cartReducer'
 
 
 const PRODUCTS_PER_PAGE = 12
 
-const useDebounce = <T,>(func: (items: T[], filter: string) => T[], items: T[], delay: number = 1000) => {
-  const [filteredData, setFilteredData] = useState(items)
-  const [filter, setFilter] = useState("")
-  useEffect(() => {
-      const timer = setTimeout(() => {
-          setFilteredData(func(items, filter))
-      }, delay)
-      return () => {
-          clearTimeout(timer)
-      }
-  }, [filter, func, items, delay])
-  const onChangeFilter = (event: React.ChangeEvent<HTMLInputElement>) => {
-      setFilter(event.target.value)
-  }
-  return { onChangeFilter, filter, filteredData }
+interface ProductProps {
+  product: Product
 }
 
-const filterProducts = (products: Product[], filter: string) => {
-  return products.filter((product) => product.title.toLowerCase().includes(filter.toLowerCase()))
-}
 const HomePage = () => {
   const { loading, error } = useCustomSelector(state => state.productsReducer)
   const products = useCustomSelector((state) => state.productsReducer.products)
   const users = useCustomSelector((state) => state.usersReducer.users)
+  const cartItems = useCustomSelector((state) => state.cartReducer)
+  const cartItemsList = useCustomSelector((state) => state.cartReducer.items)
   const { onChangeFilter, filter, filteredData } = useDebounce<Product>(filterProducts, products)
   const [selectedSortOption, setSelectedSortOption] = useState("")
   const dispatch = useAppDispatch()
   const [page, setPage] = useState(1)
   const [count, setCount] = useState(1)
+  const [cartOpen, setCartOpen] = useState(false)
 
   const sortingOptions = [
     { id: "priceAsc", label: "Price low to high" },
@@ -51,19 +40,14 @@ const HomePage = () => {
     { id: "nameDesc", label: "Name Z-A" },
   ]
   useEffect(() => {
-    dispatch(fetchAllUsers())
-  }, [dispatch])
-  useEffect(() => {
     const offset = (page - 1) * PRODUCTS_PER_PAGE
     dispatch(fetchAllProducts({ offset, limit: PRODUCTS_PER_PAGE })).then((result: any ) => {
       // setCount(Math.ceil(result.meta.total / PRODUCTS_PER_PAGE))
       setCount(17)
-
     })
   }, [dispatch, page])
 
   useEffect(() => {
-    console.log(selectedSortOption)
     switch (selectedSortOption) {
       case "priceAsc":
         dispatch(sortProductsByPriceAsc())
@@ -89,6 +73,10 @@ const HomePage = () => {
   const handleSortOptionChange = (e: React.ChangeEvent<{ value: unknown }>) => {
     const selectedOption = e.target.value as string
     setSelectedSortOption(selectedOption)
+  }
+  const handleAddToCart = (id: number, title: string, price: number, quantity: 1) => {
+    setCartOpen(true)
+    dispatch(addProductToCart({id, title, price, quantity}))
   }
   return (
     <div>
@@ -144,7 +132,10 @@ const HomePage = () => {
             {filteredData.map(product => (
               <Grid item key={product.id} xs={12} sm={6} md={4} lg={3}>
                 <Card className="card">
-                  <IconButton className="shopping-cart">
+                  <IconButton 
+                    className="shopping-cart"
+                    onClick={() => handleAddToCart(product.id, product.title, product.price, 1)}
+                  >
                     <AddShoppingCart />
                   </IconButton>
                   <CardActionArea>
