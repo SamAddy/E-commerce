@@ -8,12 +8,12 @@ import useCustomSelector from '../hooks/useCustomSelector'
 import { fetchSingleProduct } from '../redux/reducers/productsReducer'
 import store from '../redux/store'
 import Header from '../component/Header'
+import { addProductToCart } from '../redux/reducers/cartReducer'
 
 const ProductPage = () => {
     const { id } = useParams<{ id: string }>()
     const dispatch = useDispatch()
     const singleProduct = useCustomSelector((state) => state.productsReducer.singleProduct)
-    console.log(singleProduct)
     const { loading, error } = useCustomSelector((state) => state.productsReducer)
     useEffect(() => {
         if (id) {
@@ -28,6 +28,9 @@ const ProductPage = () => {
     }
     if (!singleProduct) {
         return <div>No product found.</div>
+    }
+    const handleAddToCart = (id: number, title: string, price: number, quantity: 1) => {
+        dispatch(addProductToCart({ id, title, price, quantity }))
     }
     return (
         <div>
@@ -57,8 +60,10 @@ const ProductPage = () => {
                         </Grid>
                     </Box>
                     <Button variant="contained">Buy me</Button>
-                    <IconButton>
-                    <AddShoppingCart />
+                    <IconButton
+                        onClick={() => handleAddToCart(singleProduct.id, singleProduct.title, singleProduct.price, 1)}
+                    >
+                        <AddShoppingCart />
                     </IconButton>
                 </Box>
             </div>
