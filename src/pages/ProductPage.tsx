@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { Grid, Box, Typography, Button, IconButton } from '@mui/material'
 import { AddShoppingCart } from '@mui/icons-material'
 
@@ -13,6 +13,7 @@ import { addProductToCart } from '../redux/reducers/cartReducer'
 const ProductPage = () => {
     const { id } = useParams<{ id: string }>()
     const dispatch = useDispatch()
+    const navigate = useNavigate()
     const singleProduct = useCustomSelector((state) => state.productsReducer.singleProduct)
     const { loading, error } = useCustomSelector((state) => state.productsReducer)
     useEffect(() => {
@@ -31,6 +32,10 @@ const ProductPage = () => {
     }
     const handleAddToCart = (id: number, title: string, price: number, quantity: 1) => {
         dispatch(addProductToCart({ id, title, price, quantity }))
+    }
+    const handleBuyNowButton = (id: number, title: string, price: number, quantity: 1) => {
+        dispatch(addProductToCart({ id, title, price, quantity }))
+        navigate("/cart")
     }
     return (
         <div>
@@ -59,7 +64,12 @@ const ProductPage = () => {
                             ))}
                         </Grid>
                     </Box>
-                    <Button variant="contained">Buy me</Button>
+                    <Button 
+                        onClick={() => handleBuyNowButton(singleProduct.id, singleProduct.title, singleProduct.price, 1)}
+                        variant="contained"
+                    >
+                            Buy now
+                    </Button>
                     <IconButton
                         onClick={() => handleAddToCart(singleProduct.id, singleProduct.title, singleProduct.price, 1)}
                     >
