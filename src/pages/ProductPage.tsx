@@ -3,22 +3,21 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { Grid, Box, Typography, Button, IconButton } from '@mui/material'
 import { AddShoppingCart } from '@mui/icons-material'
 
-import { useDispatch } from 'react-redux'
 import useCustomSelector from '../hooks/useCustomSelector'
 import { fetchSingleProduct } from '../redux/reducers/productsReducer'
-import store from '../redux/store'
 import Header from '../component/Header'
 import { addProductToCart } from '../redux/reducers/cartReducer'
+import useAppDispatch from '../hooks/useAppDispatch'
 
 const ProductPage = () => {
     const { id } = useParams<{ id: string }>()
-    const dispatch = useDispatch()
+    const dispatch = useAppDispatch()
     const navigate = useNavigate()
     const singleProduct = useCustomSelector((state) => state.productsReducer.singleProduct)
     const { loading, error } = useCustomSelector((state) => state.productsReducer)
     useEffect(() => {
         if (id) {
-            store.dispatch(fetchSingleProduct(Number(id)))
+            dispatch(fetchSingleProduct(Number(id)))
         }
     }, [dispatch, id])
     if (loading) {
