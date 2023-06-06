@@ -1,9 +1,9 @@
-import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit"   
-import axios, { AxiosError } from "axios"  
+import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit"
+import axios, { AxiosError } from "axios"
 
-import { FetchProductsParams, FileUploadResponse, Product, ProductState } from "../../type/Product"  
-import { ProductUpdate } from "../../type/ProductUpdate"  
-import { CreateProduct } from "../../type/CreateProduct"  
+import { FetchProductsParams, FileUploadResponse, Product, ProductState } from "../../type/Product"
+import { ProductUpdate } from "../../type/ProductUpdate"
+import { CreateProduct } from "../../type/CreateProduct"
 
 const initialState: ProductState = {
     products: [],
@@ -51,37 +51,37 @@ export const fetchSingleProduct = createAsyncThunk(
 export const uploadFile = async (file: File): Promise<string> => {
     const formData = new FormData()
     formData.append('file', file)
-  
-    try {
-      const response = await axios.post('https://api.escuelajs.co/api/v1/files/upload', formData)   
-      const { location } = response.data
-      return location
-    } catch (error) {
-      throw new Error('Failed to upload file')
-    }
-  }
 
-  export const addNewProduct = createAsyncThunk(
+    try {
+        const response = await axios.post('https://api.escuelajs.co/api/v1/files/upload', formData)
+        const { location } = response.data
+        return location
+    } catch (error) {
+        throw new Error('Failed to upload file')
+    }
+}
+
+export const addNewProduct = createAsyncThunk(
     'createProduct',
     async ({ file, product }: { file: File | null; product: CreateProduct }) => {
-        let imageUrl = ''  
+        let imageUrl = ''
         if (file) {
-          imageUrl = await uploadFile(file)  
+            imageUrl = await uploadFile(file)
         }
-    
+
         const productData: CreateProduct = {
-          ...product,
-          images: file ? [imageUrl] : [],
-        }  
-  
-      try {
-        const response = await axios.post('https://api.escuelajs.co/api/v1/products', productData)  
-        return response.data  
-      } catch (error) {
-        throw new Error('Failed to create a new product')  
-      }
+            ...product,
+            images: file ? [imageUrl] : [],
+        }
+
+        try {
+            const response = await axios.post('https://api.escuelajs.co/api/v1/products', productData)
+            return response.data
+        } catch (error) {
+            throw new Error('Failed to create a new product')
+        }
     }
-  )
+)
 
 export const updateExistingProduct = createAsyncThunk(
     "updateProduct",
@@ -124,7 +124,7 @@ const productsSlice = createSlice({
         cleanUpProductReducer: (state) => {
             return initialState
         },
-        sortProductByCategory: (state, action: PayloadAction<"asc"|"desc">) => {
+        sortProductByCategory: (state, action: PayloadAction<"asc" | "desc">) => {
             state.products.sort((a, b) => {
                 if (action.payload === "asc") {
                     return a.category.name.localeCompare(b.category.name)
@@ -134,17 +134,17 @@ const productsSlice = createSlice({
                 }
             })
         },
-        sortProductByPrice: (state, action: PayloadAction<"priceAsc"|"priceDesc">) => {
+        sortProductByPrice: (state, action: PayloadAction<"priceAsc" | "priceDesc">) => {
             state.products.sort((a, b) => {
                 if (action.payload === "priceAsc") {
                     return a.price - b.price
-                } 
+                }
                 else {
                     return b.price - a.price
-                }  
+                }
             })
         },
-        sortProductByName: (state, action: PayloadAction<"nameAsc"|"nameDesc">) => {
+        sortProductByName: (state, action: PayloadAction<"nameAsc" | "nameDesc">) => {
             state.products.sort((a, b) => {
                 if (action.payload === "nameAsc") {
                     return a.title.localeCompare(b.title)
@@ -156,7 +156,7 @@ const productsSlice = createSlice({
         },
         sortProductsByPriceAsc(state) {
             state.products.sort((a, b) => a.price - b.price)
-          },
+        },
         sortProductsByPriceDesc(state) {
             state.products.sort((a, b) => b.price - a.price)
         },
@@ -244,7 +244,7 @@ const productsSlice = createSlice({
                 state.loading = true
             })
             .addCase(deleteAProduct.fulfilled, (state, action) => {
-                state.loading = false   
+                state.loading = false
                 state.products = state.products.filter((product) => product.id !== action.payload.id)
             })
     }
@@ -252,5 +252,5 @@ const productsSlice = createSlice({
 
 const productsReducer = productsSlice.reducer
 export const { cleanUpProductReducer, sortProductByPrice, sortProductByCategory, sortProductByName } = productsSlice.actions
-export const {  sortProductsByPriceAsc, sortProductsByPriceDesc, sortProductsByNameAsc, sortProductsByNameDesc } = productsSlice.actions
+export const { sortProductsByPriceAsc, sortProductsByPriceDesc, sortProductsByNameAsc, sortProductsByNameDesc } = productsSlice.actions
 export default productsReducer
