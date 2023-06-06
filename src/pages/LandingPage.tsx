@@ -1,23 +1,43 @@
-import React, { Component, useEffect } from 'react'
-import { Box, Button, Card, CardActionArea, CardContent, CardMedia, Container, Grid, ImageList, ImageListItem, ImageListItemBar, Typography } from '@mui/material'
-import { Link, useNavigate } from 'react-router-dom'
+import React, { Component, useEffect } from "react"  
+import {
+  Box,
+  Button,
+  Card,
+  CardActionArea,
+  CardContent,
+  CardMedia,
+  Container,
+  Grid,
+  IconButton,
+  Typography,
+} from "@mui/material"  
+import { Link, useNavigate } from "react-router-dom"  
 
-import Header from '../component/Header'
-import Footer from '../component/Footer'
-import useCustomSelector from '../hooks/useCustomSelector'
-import useAppDispatch from '../hooks/useAppDispatch'
-import { fetchAllCartegories } from '../redux/reducers/cartegoriesReducer'
+import Header from "../component/Header"  
+import Footer from "../component/Footer"  
+import useCustomSelector from "../hooks/useCustomSelector"  
+import useAppDispatch from "../hooks/useAppDispatch"  
+import { deleteCartegory, fetchAllCartegories } from "../redux/reducers/cartegoriesReducer"  
+import { Delete, Edit } from "@mui/icons-material"  
 
 const LandingPage = () => {
-  const { categories, loading, error } = useCustomSelector((state) => state.cartegoriesReducer)
+  const { categories, loading, error } = useCustomSelector(
+    (state) => state.cartegoriesReducer
+  )
+  const currentUser = useCustomSelector(
+    (state) => state.usersReducer.currentUser
+  )
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
 
   useEffect(() => {
-    dispatch(fetchAllCartegories())
-  }, [dispatch])
+    dispatch(fetchAllCartegories())  
+  }, [dispatch])  
   const handleButtonClick = () => {
     navigate("/products")
+  }
+  const handleDelete = (categoryId: number) => {
+    dispatch(deleteCartegory(categoryId))
   }
   return (
     <div>
@@ -26,10 +46,17 @@ const LandingPage = () => {
       </header>
       <main>
         <Container maxWidth="md">
-          <Grid container spacing={2} alignItems="center" justifyContent="center" className="explore-grid">
-            <Grid item xs={12} md={6} >
+          <Grid
+            container
+            spacing={2}
+            alignItems="center"
+            justifyContent="center"
+            className="explore-grid"
+          >
+            <Grid item xs={12} md={6}>
               <Typography variant="body1" gutterBottom>
-                Discover a wide range of high-quality products for all your needs.
+                Discover a wide range of high-quality products for all your
+                needs.
               </Typography>
               <Button
                 variant="contained"
@@ -54,7 +81,7 @@ const LandingPage = () => {
           <Typography>Error: {error}</Typography>
         ) : (
           <Grid container spacing={3}>
-            {categories.map(category => (
+            {categories.map((category) => (
               <Grid item key={category.id} xs={12} sm={6} md={4} lg={3}>
                 <Card>
                   <CardActionArea>
@@ -72,17 +99,27 @@ const LandingPage = () => {
                       </CardContent>
                     </Link>
                   </CardActionArea>
+                  {currentUser?.role == "admin" && (
+                    <>
+                      <IconButton
+                        onClick={() => handleDelete(category.id)}
+                      >
+                        <Delete />
+                      </IconButton>
+                      <IconButton>
+                        <Edit />
+                      </IconButton>
+                    </>
+                  )}
                 </Card>
               </Grid>
-            ))
-            }
+            ))}
           </Grid>
-        )
-        }
+        )}
       </main>
       <Footer />
     </div>
-  )
-}
+  )  
+}  
 
-export default LandingPage
+export default LandingPage  

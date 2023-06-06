@@ -1,37 +1,28 @@
 import React, { useEffect, useState } from 'react'
 import { Box, Card, CardActionArea, CardContent, CardMedia, Grid, IconButton, MenuItem, Pagination, TextField, Typography } from '@mui/material'
-import { AddShoppingCart, Preview } from '@mui/icons-material'
+import { AddShoppingCart, Delete, Edit } from '@mui/icons-material'
 import { Link } from 'react-router-dom'
 
-import { fetchAllProducts, sortProductsByNameAsc, sortProductsByNameDesc, sortProductsByPriceAsc, sortProductsByPriceDesc } from "../redux/reducers/productsReducer"
+import { deleteAProduct, fetchAllProducts, sortProductsByNameAsc, sortProductsByNameDesc, sortProductsByPriceAsc, sortProductsByPriceDesc } from "../redux/reducers/productsReducer"
 import useAppDispatch from '../hooks/useAppDispatch'
 import useCustomSelector from '../hooks/useCustomSelector'
 import Header from '../component/Header'
 import Footer from '../component/Footer'
 import { Product } from '../type/Product'
-import { fetchAllUsers } from '../redux/reducers/usersReducer'
 import { filterProducts, useDebounce } from '../hooks/useDebounce'
 import { addProductToCart } from '../redux/reducers/cartReducer'
 
-
 const PRODUCTS_PER_PAGE = 12
-
-interface ProductProps {
-  product: Product
-}
 
 const HomePage = () => {
   const { loading, error } = useCustomSelector(state => state.productsReducer)
   const products = useCustomSelector((state) => state.productsReducer.products)
-  const users = useCustomSelector((state) => state.usersReducer.users)
-  const cartItems = useCustomSelector((state) => state.cartReducer)
-  const cartItemsList = useCustomSelector((state) => state.cartReducer.items)
+  const currentUser = useCustomSelector((state) => state.usersReducer.currentUser)
   const { onChangeFilter, filter, filteredData } = useDebounce<Product>(filterProducts, products)
   const [selectedSortOption, setSelectedSortOption] = useState("")
   const dispatch = useAppDispatch()
   const [page, setPage] = useState(1)
   const [count, setCount] = useState(1)
-  const [cartOpen, setCartOpen] = useState(false)
 
   const sortingOptions = [
     { id: "priceAsc", label: "Price low to high" },
@@ -42,8 +33,8 @@ const HomePage = () => {
   useEffect(() => {
     const offset = (page - 1) * PRODUCTS_PER_PAGE
     dispatch(fetchAllProducts({ offset, limit: PRODUCTS_PER_PAGE })).then((result: any ) => {
-      // setCount(Math.ceil(result.meta.total / PRODUCTS_PER_PAGE))
-      setCount(17)
+      console.log(result)
+      setCount(Math.ceil(result.meta.total / PRODUCTS_PER_PAGE))
     })
   }, [dispatch, page])
 
@@ -75,8 +66,10 @@ const HomePage = () => {
     setSelectedSortOption(selectedOption)
   }
   const handleAddToCart = (id: number, title: string, price: number, quantity: 1) => {
-    setCartOpen(true)
     dispatch(addProductToCart({id, title, price, quantity}))
+  }
+  const handleDelete = (productId: number) => {
+    dispatch(deleteAProduct(productId))
   }
   return (
     <div>
@@ -157,6 +150,18 @@ const HomePage = () => {
                     </CardContent>
                     </Link>
                   </CardActionArea>
+                  {currentUser?.role == "admin" && (
+                    <>
+                      <IconButton
+                        onClick={ () => handleDelete(product.id)}
+                      >
+                        <Delete />
+                      </IconButton>
+                      <IconButton>
+                        <Edit />
+                      </IconButton>
+                    </>
+                  )}
                 </Card>
               </Grid>
             ))
