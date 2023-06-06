@@ -1,9 +1,9 @@
-import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import axios, { AxiosError } from "axios";
+import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit"   
+import axios, { AxiosError } from "axios"  
 
-import { FetchProductsParams, Product, ProductState } from "../../type/Product";
-import { ProductUpdate } from "../../type/ProductUpdate";
-import { CreateProduct } from "../../type/CreateProduct";
+import { FetchProductsParams, FileUploadResponse, Product, ProductState } from "../../type/Product"  
+import { ProductUpdate } from "../../type/ProductUpdate"  
+import { CreateProduct } from "../../type/CreateProduct"  
 
 const initialState: ProductState = {
     products: [],
@@ -12,11 +12,13 @@ const initialState: ProductState = {
     singleProduct: null
 }
 
+const BASE_URL = 'https://api.escuelajs.co/api/v1'
+
 export const fetchAllProducts = createAsyncThunk(
     "fetchAllProducts",
     async ({ offset = 0, limit = 12 }: FetchProductsParams) => {
         try {
-            const response = await axios.get<Product[]>(`https://api.escuelajs.co/api/v1/products?offset=${offset}&limit=${limit}`)
+            const response = await axios.get<Product[]>(`${BASE_URL}/products?offset=${offset}&limit=${limit}`)
             return response.data
         }
         catch (e) {
@@ -33,7 +35,7 @@ export const fetchSingleProduct = createAsyncThunk(
     "product",
     async (productId: number) => {
         try {
-            const response = await axios.get<Product>(`https://api.escuelajs.co/api/v1/products/${productId}`)
+            const response = await axios.get<Product>(`${BASE_URL}/products/${productId}`)
             return response.data
         }
         catch (e) {
@@ -46,22 +48,40 @@ export const fetchSingleProduct = createAsyncThunk(
     }
 )
 
-export const addNewProduct = createAsyncThunk(
-    "createProduct",
-    async (product: CreateProduct) => {
-        try {
-            const response = await axios.post<Product>("https://api.escuelajs.co/api/v1/products/", product)
-            return response.data
-        }
-        catch (e) {
-            const error = e as AxiosError
-            if (error.response) {
-                return JSON.stringify(error.response.data)
-            }
-            return error.message
-        }
+export const uploadFile = async (file: File): Promise<string> => {
+    const formData = new FormData()
+    formData.append('file', file)
+  
+    try {
+      const response = await axios.post('https://api.escuelajs.co/api/v1/files/upload', formData)   
+      const { location } = response.data
+      return location
+    } catch (error) {
+      throw new Error('Failed to upload file')
     }
-)
+  }
+
+  export const addNewProduct = createAsyncThunk(
+    'createProduct',
+    async ({ file, product }: { file: File | null; product: CreateProduct }) => {
+        let imageUrl = ''  
+        if (file) {
+          imageUrl = await uploadFile(file)  
+        }
+    
+        const productData: CreateProduct = {
+          ...product,
+          images: file ? [imageUrl] : [],
+        }  
+  
+      try {
+        const response = await axios.post('https://api.escuelajs.co/api/v1/products', productData)  
+        return response.data  
+      } catch (error) {
+        throw new Error('Failed to create a new product')  
+      }
+    }
+  )
 
 export const updateExistingProduct = createAsyncThunk(
     "updateProduct",
@@ -84,7 +104,7 @@ export const deleteAProduct = createAsyncThunk(
     "deleteProduct",
     async (productId: number) => {
         try {
-            const response = await axios.delete(`https://api.escuelajs.co/api/v1/products/${productId}`)
+            const response = await axios.delete(`${BASE_URL}/products/${productId}`)
             return response.data
         }
         catch (e) {
@@ -193,6 +213,7 @@ const productsSlice = createSlice({
                     state.error = action.payload
                 }
                 else {
+                    console.log(action.payload)
                     state.products.push(action.payload)
                 }
             })
@@ -219,8 +240,12 @@ const productsSlice = createSlice({
                 state.error = "Error updating product"
                 state.loading = false
             })
+            .addCase(deleteAProduct.rejected, (state) => {
+                state.loading = true
+            })
             .addCase(deleteAProduct.fulfilled, (state, action) => {
-                state.products.filter((product) => product.id !== action.payload.id)
+                state.loading = false   
+                state.products = state.products.filter((product) => product.id !== action.payload.id)
             })
     }
 })
