@@ -35,12 +35,12 @@ const Login = () => {
     handleSubmit,
     register,
     formState: { errors },
-  } = useForm<UserCredentials>();
+  } = useForm<UserCredentials>()
 
   const [errorMessage, setErrorMessage] = useState("");
   const { currentUser, isLoggedIn } = useCustomSelector(
     (state) => state.usersReducer
-  );
+  )
 
   const handleLogin = (data: UserCredentials) => {
     dispatch(login(data))
@@ -50,13 +50,13 @@ const Login = () => {
           console.log("Current user is: " + currentUser?.name);
           window.alert("Inorrect data please try again.");
         } else {
-          navigate("/");
+          navigate("/")
         }
       })
       .catch((error) => {
         setErrorMessage("An error occurred during login");
-      });
-  };
+      })
+  }
 
   return (
     <Box
@@ -128,7 +128,7 @@ const Login = () => {
         <Copyright sx={{ mt: 5 }} />
       </Box>
     </Box>
-  );
-};
+  )
+}
 
 export default Login;
