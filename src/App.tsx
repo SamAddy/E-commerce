@@ -13,6 +13,7 @@ import CategoryProducts from './pages/CategoryProducts'
 import { ThemeProvider } from './theme/ThemeContext'
 import { StyledContainer } from './component/ThemeSwitcher'
 import CartPage from './pages/CartPage'
+import AdminPage from './pages/AdminPage'
 
 const App = () => {
   const router = createBrowserRouter([
@@ -53,10 +54,13 @@ const App = () => {
       path: "cart/",
       element: <CartPage />
     },
+    {
+      path: "adminpage/",
+      element: <AdminPage />
+    },
   ])
 
   return (
-
     <StyledEngineProvider injectFirst>
       <ThemeProvider>
           <StyledContainer>
