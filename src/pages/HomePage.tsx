@@ -33,7 +33,6 @@ const HomePage = () => {
   useEffect(() => {
     const offset = (page - 1) * PRODUCTS_PER_PAGE
     dispatch(fetchAllProducts({ offset, limit: PRODUCTS_PER_PAGE })).then((result: any ) => {
-      console.log(result)
       setCount(Math.ceil(result.meta.total / PRODUCTS_PER_PAGE))
     })
   }, [dispatch, page])
