@@ -33,3 +33,9 @@ export interface FetchProductsParams {
     offset: number;
     limit: number;
   }
+
+export interface FileUploadResponse {
+    originalname: string;
+    filename: string;
+    location: string;
+}

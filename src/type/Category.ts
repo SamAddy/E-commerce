@@ -12,3 +12,8 @@ export interface CategoryState {
     error: string
     categoryProducts?: Product[]
 }
+
+export interface NewCategory {
+    name: string
+    image: string
+}
