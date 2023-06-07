@@ -1,4 +1,4 @@
-# Front-end Project
+# E-commerce Website
 
 ![React](https://img.shields.io/badge/React-v.18-blue)
 ![Redux toolkit](https://img.shields.io/badge/RTK-v.1-purple)
@@ -6,17 +6,31 @@
 ![SASS](https://img.shields.io/badge/SASS-v.1-hotpink)
 ![Material-UI](https://img.shields.io/badge/MUI-v5-orange)
 
-This an E-commerce project built with TypeScript, redux, react and SASS and MUI. The data was pulled from this API endpoint [https://fakeapi.platzi.com/](https://fakeapi.platzi.com/). Click [here](https://shop-goodies.netlify.app/) to view it live.
+This is an E-commerce project built with TypeScript, redux, react and SASS and MUI library. This project is all about unleashing the power of APIs and providing an immersive shopping experience. The data was pulled from [Platzi Fake API ](https://fakeapi.platzi.com/). See the site in action [here](https://shop-goodies.netlify.app/).
 
 ## Features
-* Login - customer and admin can login to view their profile.
-* Register - users can register to do shopping on this site.
-* You may add products to cart while shopping.
-* Sort products by price, name and category
-* Profile page - Admin has the right to update products, add products, delete product and also add new categories.
-* Context API for switching
+
+* <b>Login</b> - Both customers and administrators can log in to view their respective profiles.
+* <b>Register</b> - Users can register on the website to start shopping.
+* <b>Product Cart</b> - Add products to your cart while shopping.
+* <b>Product Sorting</b> Sort products by price, name, and category for easy browsing.
+* <b>Product Search</b> - Search for specific products using keywords or other relevant information.
+* <b>Admin Capabilities</b> - Admin has special privileges such as updating products, adding new products, deleting products, and managing categories.
+* <b>Pagination</b> - Implement pagination to display products in smaller, manageable chunks.
+* <b>Context API</b> Utilize the Context API to provide a customizable mode feature, enabling users to switch between light mode and dark mode.
+
+## Test Accounts
+
+<b>Admin</b>
+* Email: admin@mail.com 
+* Password: admin123
+
+<b>Customer</b>
+* Emails: maria@mail.com 
+* Password: 12345
 
 ## Structure
+
 ```
 .
 ├── README.md
