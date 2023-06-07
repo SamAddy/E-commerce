@@ -28,6 +28,8 @@ const AddCategory = () => {
     }
 
     dispatch(addNewCartegory({ file, category: newCategory }))
+    setCategory({ name: '', image: '' });
+    setFile(null)
   }
   const handleInputChange =
     (field: keyof NewCategory) =>
