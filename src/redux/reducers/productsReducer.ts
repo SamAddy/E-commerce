@@ -53,7 +53,7 @@ export const uploadFile = async (file: File): Promise<string> => {
     formData.append('file', file)
 
     try {
-        const response = await axios.post('https://api.escuelajs.co/api/v1/files/upload', formData)
+        const response = await axios.post(`${BASE_URL}/files/upload`, formData)
         const { location } = response.data
         return location
     } catch (error) {
@@ -75,7 +75,7 @@ export const addNewProduct = createAsyncThunk(
         }
 
         try {
-            const response = await axios.post('https://api.escuelajs.co/api/v1/products', productData)
+            const response = await axios.post<Product>(`${BASE_URL}/products`, productData)
             return response.data
         } catch (error) {
             throw new Error('Failed to create a new product')
@@ -87,7 +87,7 @@ export const updateExistingProduct = createAsyncThunk(
     "updateProduct",
     async (product: ProductUpdate) => {
         try {
-            const response = await axios.put<Product>(`https://api.escuelajs.co/api/v1/products/${product.id}`, product)
+            const response = await axios.put<Product>(`${BASE_URL}/products/${product.id}`, product)
             return response.data
         }
         catch (e) {
@@ -104,7 +104,7 @@ export const deleteAProduct = createAsyncThunk(
     "deleteProduct",
     async (productId: number) => {
         try {
-            const response = await axios.delete(`${BASE_URL}/products/${productId}`)
+            const response = await axios.delete<Product>(`${BASE_URL}/products/${productId}`)
             return response.data
         }
         catch (e) {
@@ -245,7 +245,9 @@ const productsSlice = createSlice({
             })
             .addCase(deleteAProduct.fulfilled, (state, action) => {
                 state.loading = false
-                state.products = state.products.filter((product) => product.id !== action.payload.id)
+                const productId = action.meta.arg
+                state.products = state.products.filter((product) => product.id !== productId)
+                
             })
     }
 })
