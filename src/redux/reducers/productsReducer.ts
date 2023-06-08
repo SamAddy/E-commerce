@@ -104,7 +104,7 @@ export const deleteAProduct = createAsyncThunk(
     "deleteProduct",
     async (productId: number) => {
         try {
-            const response = await axios.delete<Product>(`${BASE_URL}/products/${productId}`)
+            const response = await axios.delete<Boolean>(`${BASE_URL}/products/${productId}`)
             return response.data
         }
         catch (e) {
