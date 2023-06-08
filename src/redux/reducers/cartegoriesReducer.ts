@@ -157,7 +157,8 @@ const cartegoriesSlice = createSlice({
                     state.error = action.payload.message
                 }
                 else {
-                    state.categories = state.categories.filter((category) => category.id !== action.payload)
+                    const categoryId = action.meta.arg
+                    state.categories = state.categories.filter((category) => category.id !== categoryId)
                 }
             })
             .addCase(deleteCartegory.rejected, (state, action) => {
