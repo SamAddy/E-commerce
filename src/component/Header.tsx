@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext } from "react";
 import {
   AppBar,
   Avatar,
@@ -14,24 +14,24 @@ import {
   Typography,
 } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
-import { ShoppingCart } from "@mui/icons-material";
+import { DarkMode, LightModeSharp, ShoppingCart } from "@mui/icons-material";
 import MenuIcon from "@mui/icons-material/Menu";
 
 import useCustomSelector from "../hooks/useCustomSelector";
 import { logout } from "../redux/reducers/usersReducer";
-import ThemeSwitcher from "./ThemeSwitcher";
 import useAppDispatch from "../hooks/useAppDispatch";
+import { ThemeContext } from "../theme/ThemeContext";
 
 const pages = ["Products"];
-const settings = ["Profile", "Login"];
 
 export const Header = () => {
+  const { darkMode, toggleDarkMode } = useContext(ThemeContext);
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
-  )
+  );
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
     null
-  )
+  );
   const { currentUser, isLoggedIn } = useCustomSelector(
     (state) => state.usersReducer
   );
@@ -41,32 +41,44 @@ export const Header = () => {
   const getTotalItems = cartItems.reduce(
     (total, cartItem) => total + cartItem.quantity,
     0
-  )
+  );
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
-  }
+  };
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
-  }
+  };
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
-  }
+  };
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
-  }
+  };
+
+  const handleLogin = () => {
+    navigate("/login");
+  };
+
   const handleLogout = () => {
     dispatch(logout());
     navigate("/");
-  }
+  };
 
   const handlCartButton = () => {
-    navigate("/cart")
-  }
+    navigate("/cart");
+  };
+
+  const handleAdminPage = () => {
+    navigate("/adminpage");
+  };
+
+  const handleProfile = () => {
+    navigate("/profile");
+  };
   return (
     <div>
-      <ThemeSwitcher />
-      <AppBar position="static">
+      <AppBar position="fixed">
         <Container maxWidth="xl">
           <Toolbar disableGutters>
             <Typography
@@ -160,101 +172,58 @@ export const Header = () => {
                 </Button>
               ))}
             </Box>
-            <Box sx={{ display: "flex" }}>
-              <Button color="inherit" onClick={handleLogout}>
-                {isLoggedIn ? "Logout" : ""}
-              </Button>
-
-              <IconButton color="inherit" onClick={handlCartButton}>
-                <Badge badgeContent={getTotalItems} color="error">
-                  <ShoppingCart color="inherit" />
-                </Badge>
-              </IconButton>
-            </Box>
             <Box sx={{ flexGrow: 0 }}>
-              <Tooltip title="Open settings">
-                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Avatar
-                    alt={currentUser?.name}
-                    src={`${currentUser?.avatar}`}
-                  />
-                </IconButton>
-              </Tooltip>
-              <Menu
-                sx={{ mt: "45px" }}
-                id="menu-appbar"
-                anchorEl={anchorElUser}
-                anchorOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                open={Boolean(anchorElUser)}
-                onClose={handleCloseUserMenu}
-              >
-                {isLoggedIn ? (
+              <Tooltip title="">
+                {currentUser ? (
                   <>
-                    {settings.slice(0, 3).map((setting) => (
-                      <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                        <Typography
-                          component={Link}
-                          to={`/${setting.toLowerCase()}`}
-                          color="primary"
-                          textAlign="center"
-                        >
-                          {setting}
-                        </Typography>
-                      </MenuItem>
-                    ))}
-                    {currentUser?.role === "admin" && (
-                      <MenuItem key="dashboard" onClick={handleCloseUserMenu}>
-                        <Typography
-                          component={Link}
-                          to="/adminpage"
-                          color="primary"
-                          textAlign="center"
-                        >
-                          Dashboard
-                        </Typography>
-                      </MenuItem>
+                    <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                      <Avatar
+                        alt={currentUser?.name}
+                        src={`${currentUser?.avatar}`}
+                      />
+                    </IconButton>
+                    {currentUser.role.toLocaleLowerCase() === "admin" ? (
+                      <Menu
+                        anchorEl={anchorElUser}
+                        open={Boolean(anchorElUser)}
+                        onClose={handleCloseUserMenu}
+                      >
+                        <MenuItem onClick={handleAdminPage}>
+                          Admin Dashboard
+                        </MenuItem>
+                        <MenuItem onClick={handleLogout}>Logout</MenuItem>
+                      </Menu>
+                    ) : (
+                      <Menu
+                        anchorEl={anchorElUser}
+                        open={Boolean(anchorElUser)}
+                        onClose={handleCloseUserMenu}
+                      >
+                        <MenuItem onClick={handleProfile}>Profile</MenuItem>
+                        <MenuItem onClick={handleLogout}>Logout</MenuItem>
+                      </Menu>
                     )}
                   </>
                 ) : (
-                  settings.map((setting) => (
-                    <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                      {setting === "Login" ? (
-                        <Typography
-                          component={Link}
-                          to={isLoggedIn ? "#" : `/${setting.toLowerCase()}`}
-                          color={isLoggedIn ? "inherit" : "primary"}
-                          textAlign="center"
-                        >
-                          {setting}
-                        </Typography>
-                      ) : (
-                        <Typography
-                          component={Link}
-                          to={`/${setting.toLowerCase()}`}
-                          color="primary"
-                          textAlign="center"
-                        >
-                          {setting}
-                        </Typography>
-                      )}
-                    </MenuItem>
-                  ))
+                  <IconButton onClick={handleLogin}>
+                    <Avatar />
+                  </IconButton>
                 )}
-              </Menu>
+              </Tooltip>
             </Box>
+            <IconButton color="inherit" onClick={handlCartButton}>
+              <Badge badgeContent={getTotalItems} color="error">
+                <ShoppingCart color="inherit" />
+              </Badge>
+            </IconButton>
+            <IconButton color="inherit" onClick={toggleDarkMode}>
+              {darkMode ? <LightModeSharp /> : <DarkMode />}
+            </IconButton>
           </Toolbar>
         </Container>
       </AppBar>
     </div>
-  )
-}
+  );
+};
 
-export default Header
+export default Header;
