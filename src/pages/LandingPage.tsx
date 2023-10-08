@@ -1,4 +1,4 @@
-import React, { Component, useEffect } from "react"  
+import { useEffect } from "react"  
 import {
   Box,
   Button,
@@ -29,7 +29,6 @@ const LandingPage = () => {
   )
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
-
   useEffect(() => {
     dispatch(fetchAllCartegories())  
   }, [dispatch])  
@@ -39,6 +38,7 @@ const LandingPage = () => {
   const handleDelete = (categoryId: number) => {
     dispatch(deleteCartegory(categoryId))
   }
+  const slicedCategory = categories.slice(0, 5);
   return (
     <div>
       <header>
@@ -81,7 +81,7 @@ const LandingPage = () => {
           <Typography>Error: {error}</Typography>
         ) : (
           <Grid container spacing={3}>
-            {categories.map((category) => (
+            {slicedCategory.map((category) => (
               <Grid item key={category.id} xs={12} sm={6} md={4} lg={3}>
                 <Card>
                   <CardActionArea>
@@ -99,7 +99,7 @@ const LandingPage = () => {
                       </CardContent>
                     </Link>
                   </CardActionArea>
-                  {currentUser?.role == "admin" && (
+                  {currentUser?.role === "admin" && (
                     <>
                       <IconButton
                         onClick={() => handleDelete(category.id)}
