@@ -26,7 +26,7 @@ const CartPage = () => {
     return (
         <div>
             <Header />
-            <Typography variant="h4" component="h1" align="center" gutterBottom>
+            <Typography marginTop={10} variant="h4" component="h1" align="center" gutterBottom>
                 Shopping Cart
             </Typography>
             {cartItems.length === 0 ? (

@@ -72,7 +72,7 @@ const CategoryProducts = () => {
       <main>
         <Box
           sx={{
-            marginTop: "20px",
+            marginTop: "5rem",
             marginBottom: "20px"
           }}
         >
