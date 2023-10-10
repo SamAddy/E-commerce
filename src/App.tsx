@@ -1,9 +1,7 @@
-import React, { useEffect, useState } from 'react'
-
 import NotFoundPage from './pages/NotFoundPage'
 import { StyledEngineProvider } from '@mui/material'
 import HomePage from './pages/HomePage'
-import { BrowserRouter, RouterProvider, createBrowserRouter } from 'react-router-dom'
+import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 import LandingPage from './pages/LandingPage'
 import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
@@ -14,6 +12,7 @@ import { ThemeProvider } from './theme/ThemeContext'
 import { StyledContainer } from './component/ThemeSwitcher'
 import CartPage from './pages/CartPage'
 import AdminPage from './pages/AdminPage'
+import Categories from './component/Categories'
 
 const App = () => {
   const router = createBrowserRouter([
@@ -33,6 +32,10 @@ const App = () => {
     {
       path: "product/:id",
       element: <ProductPage />
+    },
+    {
+      path: "categories/",
+      element: <Categories />
     },
     {
       path: "categories/:id",

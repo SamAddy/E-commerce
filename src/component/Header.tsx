@@ -22,7 +22,7 @@ import { logout } from "../redux/reducers/usersReducer";
 import useAppDispatch from "../hooks/useAppDispatch";
 import { ThemeContext } from "../theme/ThemeContext";
 
-const pages = ["Products"];
+const pages = ["Products", "Categories"];
 
 export const Header = () => {
   const { darkMode, toggleDarkMode } = useContext(ThemeContext);
@@ -172,6 +172,14 @@ export const Header = () => {
                 </Button>
               ))}
             </Box>
+            <IconButton color="inherit" onClick={handlCartButton}>
+              <Badge badgeContent={getTotalItems} color="error">
+                <ShoppingCart color="inherit" />
+              </Badge>
+            </IconButton>
+            <IconButton color="inherit" onClick={toggleDarkMode}>
+              {darkMode ? <DarkMode /> : <LightModeSharp /> }
+            </IconButton>
             <Box sx={{ flexGrow: 0 }}>
               <Tooltip title="">
                 {currentUser ? (
@@ -211,14 +219,7 @@ export const Header = () => {
                 )}
               </Tooltip>
             </Box>
-            <IconButton color="inherit" onClick={handlCartButton}>
-              <Badge badgeContent={getTotalItems} color="error">
-                <ShoppingCart color="inherit" />
-              </Badge>
-            </IconButton>
-            <IconButton color="inherit" onClick={toggleDarkMode}>
-              {darkMode ? <LightModeSharp /> : <DarkMode />}
-            </IconButton>
+
           </Toolbar>
         </Container>
       </AppBar>
