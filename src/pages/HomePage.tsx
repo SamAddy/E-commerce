@@ -35,11 +35,11 @@ const PRODUCTS_PER_PAGE = 12;
 
 const HomePage = () => {
   const { loading, error } = useCustomSelector(
-    (state) => state.productsReducer
+    (state) => state.products
   );
-  const products = useCustomSelector((state) => state.productsReducer.products);
+  const products = useCustomSelector((state) => state.products.products);
   const currentUser = useCustomSelector(
-    (state) => state.usersReducer.currentUser
+    (state) => state.users.currentUser
   );
   const { onChangeFilter, filter, filteredData } = useDebounce<Product>(
     filterProducts,

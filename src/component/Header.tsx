@@ -32,12 +32,12 @@ export const Header = () => {
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
     null
   );
-  const { currentUser, isLoggedIn } = useCustomSelector(
-    (state) => state.usersReducer
+  const currentUser = useCustomSelector(
+    (state) => state.users.currentUser
   );
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const cartItems = useCustomSelector((state) => state.cartReducer.items);
+  const cartItems = useCustomSelector((state) => state.cart.items);
   const getTotalItems = cartItems.reduce(
     (total, cartItem) => total + cartItem.quantity,
     0

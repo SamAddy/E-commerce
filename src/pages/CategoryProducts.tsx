@@ -7,20 +7,19 @@ import { Link } from 'react-router-dom'
 
 import useCustomSelector from '../hooks/useCustomSelector'
 import { fetchProductByCartegory } from '../redux/reducers/cartegoriesReducer'
-import store from '../redux/store'
 import Header from '../component/Header'
 import { sortProductsByNameAsc, sortProductsByNameDesc, sortProductsByPriceAsc, sortProductsByPriceDesc } from '../redux/reducers/productsReducer'
 
 const CategoryProducts = () => {
   const { id } = useParams<{ id: string }>()
   const dispatch = useDispatch()
-  const products = useCustomSelector((state) => state.cartegoriesReducer.categoryProducts)
-  const { loading, error } = useCustomSelector((state) => state.cartegoriesReducer)
+  const products = useCustomSelector((state) => state.categories.categoryProducts)
+  const { loading, error } = useCustomSelector((state) => state.categories)
   const [selectedSortOption, setSelectedSortOption] = useState("")
 
   useEffect(() => {
-    store.dispatch(fetchProductByCartegory(Number(id)))
-    // dispatch(fetchProductByCartegory as any)(Number(id))
+    // store.dispatch(fetchProductByCartegory(Number(id)))
+    dispatch(fetchProductByCartegory as any)(Number(id))
   }, [dispatch, id])
 
   useEffect(() => {

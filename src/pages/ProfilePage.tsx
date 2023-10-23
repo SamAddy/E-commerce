@@ -5,11 +5,9 @@ import { Link } from 'react-router-dom'
 
 import Header from '../component/Header'
 import useCustomSelector from '../hooks/useCustomSelector'
-import useAppDispatch from '../hooks/useAppDispatch'
-import { authenticate } from '../redux/reducers/usersReducer'
 
 const ProfilePage = () => {
-  const { currentUser, isLoggedIn } = useCustomSelector((state) => state.usersReducer)
+  const { currentUser, isLoggedIn } = useCustomSelector((state) => state.users)
   const handleUpdateProfile = () => {
 
   }

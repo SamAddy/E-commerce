@@ -21,7 +21,7 @@ const AddProduct = () => {
   const [productCategories, setProductCategories] = useState<Category[]>([]) 
 
   const categories = useCustomSelector(
-    (state) => state.cartegoriesReducer.categories
+    (state) => state.categories.categories
   ) 
   const dispatch = useAppDispatch() 
 

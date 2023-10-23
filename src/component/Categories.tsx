@@ -20,10 +20,10 @@ import { Link } from "react-router-dom";
 
 const Categories = () => {
   const { categories, loading, error } = useCustomSelector(
-    (state) => state.cartegoriesReducer
+    (state) => state.categories
   );
   const currentUser = useCustomSelector(
-    (state) => state.usersReducer.currentUser
+    (state) => state.users.currentUser
   );
   const dispatch = useAppDispatch();
   useEffect(() => {

@@ -9,7 +9,7 @@ import { Add, Delete, Remove } from '@mui/icons-material';
 
 const CartPage = () => {
     const dispatch = useDispatch()
-    const cartItems = useCustomSelector((state) => state.cartReducer.items)
+    const cartItems = useCustomSelector((state) => state.cart.items)
 
     const handleRemoveProduct = (productId: number) => {
         dispatch(removeProductFromCart(productId));

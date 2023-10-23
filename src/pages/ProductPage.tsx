@@ -13,8 +13,8 @@ const ProductPage = () => {
     const { id } = useParams<{ id: string }>()
     const dispatch = useAppDispatch()
     const navigate = useNavigate()
-    const singleProduct = useCustomSelector((state) => state.productsReducer.singleProduct)
-    const { loading, error } = useCustomSelector((state) => state.productsReducer)
+    const singleProduct = useCustomSelector((state) => state.products.singleProduct)
+    const { loading, error } = useCustomSelector((state) => state.products)
     useEffect(() => {
         if (id) {
             dispatch(fetchSingleProduct(Number(id)))
